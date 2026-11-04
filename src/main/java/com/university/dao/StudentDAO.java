@@ -1,4 +1,6 @@
+
 package com.university.dao;
+
 import com.university.model.Student;
 import com.university.util.DatabaseConnection;
 
@@ -8,7 +10,7 @@ import java.util.List;
 
 public class StudentDAO {
 
-    // Add student
+    // 1. Add Student
     public void addStudent(Student student) throws SQLException {
 
         String sql = "INSERT INTO students "
@@ -29,7 +31,7 @@ public class StudentDAO {
         }
     }
 
-    // Display all students
+    // 2. Get All Students
     public List<Student> getAllStudents() throws SQLException {
 
         List<Student> students = new ArrayList<>();
@@ -55,5 +57,25 @@ public class StudentDAO {
         }
 
         return students;
+    }
+
+    // 3. Delete Student
+    public void deleteStudent(int id) throws SQLException {
+
+        String sql = "DELETE FROM students WHERE student_id = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, id);
+
+            int rows = stmt.executeUpdate();
+
+            if (rows > 0) {
+                System.out.println("Student deleted successfully!");
+            } else {
+                System.out.println("Student not found!");
+            }
+        }
     }
 }

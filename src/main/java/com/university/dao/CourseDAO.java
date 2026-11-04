@@ -1,4 +1,6 @@
+
 package com.university.dao;
+
 import com.university.model.Course;
 import com.university.model.Instructor;
 import com.university.util.DatabaseConnection;
@@ -9,7 +11,7 @@ import java.util.List;
 
 public class CourseDAO {
 
-    // Add course
+    // 1. Add Course
     public void addCourse(Course course) throws SQLException {
 
         String sql = "INSERT INTO courses "
@@ -29,12 +31,12 @@ public class CourseDAO {
         }
     }
 
-    // Display all courses
+    // 2. Get All Courses
     public List<Course> getAllCourses() throws SQLException {
 
         List<Course> courses = new ArrayList<>();
 
-        String sql = "SELECT * FROM courses";
+        String sql = "select * from courses";
 
         try (Connection conn = DatabaseConnection.getConnection();
              Statement stmt = conn.createStatement();
@@ -43,8 +45,11 @@ public class CourseDAO {
             while (rs.next()) {
 
                 Instructor instructor = new Instructor(
-                        0, "Unknown", "unknown@example.com",
-                        "Unknown", 0
+                        rs.getInt("instructor_id"),
+                        rs.getString("name"),
+                        rs.getString("email"),
+                        rs.getString("department"),
+                        rs.getDouble("salary")
                 );
 
                 Course course = new Course(
@@ -59,5 +64,25 @@ public class CourseDAO {
         }
 
         return courses;
+    }
+
+    // 3. Delete Course
+    public void deleteCourse(int id) throws SQLException {
+
+        String sql = "DELETE FROM courses WHERE course_id = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, id);
+
+            int rows = stmt.executeUpdate();
+
+            if (rows > 0) {
+                System.out.println("Course deleted successfully!");
+            } else {
+                System.out.println("Course not found!");
+            }
+        }
     }
 }

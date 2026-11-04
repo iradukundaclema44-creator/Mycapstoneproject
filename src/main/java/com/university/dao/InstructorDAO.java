@@ -1,4 +1,6 @@
+
 package com.university.dao;
+
 import com.university.model.Instructor;
 import com.university.util.DatabaseConnection;
 
@@ -8,6 +10,7 @@ import java.util.List;
 
 public class InstructorDAO {
 
+    // 1. Add Instructor
     public void addInstructor(Instructor instructor)
             throws SQLException {
 
@@ -29,6 +32,7 @@ public class InstructorDAO {
         }
     }
 
+    // 2. Get All Instructors
     public List<Instructor> getAllInstructors()
             throws SQLException {
 
@@ -55,5 +59,26 @@ public class InstructorDAO {
         }
 
         return instructors;
+    }
+
+    // 5. Delete Instructor
+    public void deleteInstructor(int id)
+            throws SQLException {
+
+        String sql = "DELETE FROM instructors WHERE instructor_id = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, id);
+
+            int rows = stmt.executeUpdate();
+
+            if (rows > 0) {
+                System.out.println("Instructor deleted successfully!");
+            } else {
+                System.out.println("Instructor not found!");
+            }
+        }
     }
 }
